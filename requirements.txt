@@ -1,0 +1,7 @@
+PyQt5==5.15.0
+matplotlib==3.3.1
+seaborn==0.10.1
+dahuffman==0.4.1
+scipy==1.5.2
+scikit-learn==0.23.2
+numpy==1.19.1
