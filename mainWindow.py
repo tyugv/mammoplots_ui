@@ -6,6 +6,8 @@ from plotsWindow import PlotsWindow, Ui_PlotsWindow
 from draw_plots import get_matrix, draw_big_plots, draw_elements_plots, draw_sinusoid
 
 class Ui_MainWindow(object):
+    
+    # описание внешнего вида программы
     def setupUi(self, MainWindow):
 
         self.filename = None
@@ -2396,6 +2398,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    # первоначальные надписи
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -2403,18 +2406,21 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Файл не был выбран"))
         self.sinButton.setText(_translate("MainWindow", "Фиксировать элемент"))
 
+    # показать matrix_voltage_error
     def show_mve(self):
-            errimg = QtGui.QPixmap(f'images/{self.filename}/matrix_voltage_error.jpg')
+            errimg = QtGui.QPixmap(f'images/{self.filename}/matrix_voltage_error.png')
             errimg = errimg.scaled(350, 350)
             self.errormx.resize(errimg.size())
             self.errormx.setPixmap(errimg)  
 
+    # реакция на нажатие кнопки выбора файла
 
     def getfiles(self):
 
         _translate = QtCore.QCoreApplication.translate
         self.label.setText(_translate("MainWindow", 'Обработка файла'))
 
+        # попытка получения файла
         filename = QtWidgets.QFileDialog.getOpenFileName(self, filter = "Files (*.bin *.txt)")[0]
         if (filename == ''):
             self.filename = None
@@ -2432,40 +2438,67 @@ class Ui_MainWindow(object):
             self.sin.setPixmap(img)
             self.isfixed = False
 
+        # в случае если нет папки для изображения
 
         if not (self.filename in  os.listdir(os.getcwd() + '/images')):
 
             self.label.setText(_translate("MainWindow", 'Отрисовка изображения'))
             self.big_plots()
 
-        if not'matrix_voltage_error.jpg' in os.listdir(os.getcwd() + f'/images/{self.filename}'):
-            print('i am in function')           
+        # если почему-то общие графики не отрисовались
+
+        if not'matrix_voltage_error.png' in os.listdir(os.getcwd() + f'/images/{self.filename}'):        
             self.big_plots()
-        self.label.setText(_translate("MainWindow", f'{self.filename}'))
+
         self.show_mve()
 
+    # отрисовка общих графиков
 
     def big_plots(self):
+
+        _translate = QtCore.QCoreApplication.translate
+
         if not f'{self.filename}' in os.listdir('images'):
             os.mkdir(f'images/{self.filename}')
-        print('Парсинг')
-        self.matrix = get_matrix(self.path)
-        self.havematrix = True
-        print('Рисую графики')
-        draw_big_plots(self.matrix, os.getcwd() + f'/images/{self.filename}')
 
-    def little_plots(self, i, j, click):
-        if not self.havematrix:
-            print('Парсинг')
+        print('Парсинг')
+
+        try:
             self.matrix = get_matrix(self.path)
             self.havematrix = True
+        except:
+            self.label.setText(_translate("MainWindow", 'Ошибка парсинга'))
+            return             
+
+        print('Рисую графики')
+        draw_big_plots(self.matrix, os.getcwd() + f'/images/{self.filename}')
+        self.label.setText(_translate("MainWindow", f'{self.filename}'))
+
+    # отрисовка графиков конкретного элемента
+
+    def little_plots(self, i, j, click):
+
+        _translate = QtCore.QCoreApplication.translate
+
+        if not self.havematrix:
+            print('Парсинг')
+
+            try:
+                self.matrix = get_matrix(self.path)
+                self.havematrix = True
+            except:
+                self.label.setText(_translate("MainWindow", 'Ошибка парсинга'))
+                return    
+
         print('Рисую графики')
         draw_elements_plots(self.matrix, os.getcwd() + f'/images/{self.filename}', i, j, click)
+        self.label.setText(_translate("MainWindow", f'{self.filename}'))
+
+    # реакция при нажатии на кнопку отдельного элемента
 
     def showplots(self, num, click):
 
         _translate = QtCore.QCoreApplication.translate
-        #self.label.setText(_translate("MainWindow", 'Отрисовка изображения'))
 
         if not (self.filename):
             self.label.setText(_translate("MainWindow", 'Файл не выбран'))
@@ -2484,33 +2517,33 @@ class Ui_MainWindow(object):
         # вывести изображения для конкретного пикселя матрицы
 
         if not self.isfixed:
+
             self.label.setText(_translate("MainWindow", 'Отрисовка изображения'))
-            if not (f'slice{i}_{j}_{click}.jpg' in os.listdir(f'images/{self.filename}') and
-            f'deviance{i}_{j}_{click}.jpg' in os.listdir(f'images/{self.filename}') and
-            f'meas{i}_{j}_{click}.jpg' in os.listdir(f'images/{self.filename}') and
-            f'sinusoid{i}_{j}_{click}.jpg' in os.listdir(f'images/{self.filename}') and
-            f'sinusoid_ampl{i}_{j}_{click}.jpg' in os.listdir(f'images/{self.filename}')):
+            if not (f'slice{i}_{j}_{click}.png' in os.listdir(f'images/{self.filename}') and
+            f'deviance{i}_{j}_{click}.png' in os.listdir(f'images/{self.filename}') and
+            f'meas{i}_{j}_{click}.png' in os.listdir(f'images/{self.filename}') and
+            f'sinusoid{i}_{j}_{click}.png' in os.listdir(f'images/{self.filename}') and
+            f'sinusoid_ampl{i}_{j}_{click}.png' in os.listdir(f'images/{self.filename}')):
                 self.little_plots(i, j, click)
 
-            self.label.setText(_translate("MainWindow", self.filename))
-
-            sliceimg = QtGui.QPixmap(f'images/{self.filename}/slice{i}_{j}_{click}.jpg')
+            sliceimg = QtGui.QPixmap(f'images/{self.filename}/slice{i}_{j}_{click}.png')
             sliceimg = sliceimg.scaled(350, 350)
             self.slice.resize(sliceimg.size())
             self.slice.setPixmap(sliceimg)
 
-            devianceimg = QtGui.QPixmap(f'images/{self.filename}/deviance{i}_{j}_{click}.jpg')
+            devianceimg = QtGui.QPixmap(f'images/{self.filename}/deviance{i}_{j}_{click}.png')
             devianceimg = devianceimg.scaled(350, 350)
             self.deviance.resize(devianceimg.size())
             self.deviance.setPixmap(devianceimg)
 
-            measimg = QtGui.QPixmap(f'images/{self.filename}/meas{i}_{j}_{click}.jpg')
+            measimg = QtGui.QPixmap(f'images/{self.filename}/meas{i}_{j}_{click}.png')
             measimg = measimg.scaled(350, 350)
             self.meas.resize(measimg.size())
             self.meas.setPixmap(measimg)
 
-            #self.plotswindow = PlotsWindow(sin1 = QtGui.QPixmap(os.getcwd() + f'/images/{self.filename}/sinusoid{i}_{j}_{click}.jpg'),
-            #sin2 = QtGui.QPixmap(os.getcwd() + f'/images/{self.filename}/sinusoid_ampl{i}_{j}_{click}.jpg'))
+            # показать второе окно
+            #self.plotswindow = PlotsWindow(sin1 = QtGui.QPixmap(os.getcwd() + f'/images/{self.filename}/sinusoid{i}_{j}_{click}.png'),
+            #sin2 = QtGui.QPixmap(os.getcwd() + f'/images/{self.filename}/sinusoid_ampl{i}_{j}_{click}.png'))
             #if not (self.showwindplots):
             #self.plotswindow.show()
             #    self.showwindplots = True
@@ -2519,13 +2552,9 @@ class Ui_MainWindow(object):
             self.y = j
             self.state = click
 
+        # вывести изображение синусоиды если элемент зафиксирован
+
         else:
-            #if (self.state == click):
-            #    if (click == 'l'):
-            #        self.statelabel.setText(_translate("MainWindow", 'Выберите генератор правой кнопкой мыши'))
-            #    else:
-            #        self.statelabel.setText(_translate("MainWindow", 'Выберите слушатель левой кнопкой мыши'))
-            #else:
             self.label.setText(_translate("MainWindow", 'Отрисовка изображения'))
 
             if (self.state == 'g'):
@@ -2543,18 +2572,24 @@ class Ui_MainWindow(object):
 
             if not self.havematrix:
                 print('Парсинг')
-                self.matrix = get_matrix(self.path)
-                self.havematrix = True
-            print('Рисую синусоиды')
+                try:
+                    self.matrix = get_matrix(self.path)
+                    self.havematrix = True
+                except:
+                    self.label.setText(_translate("MainWindow", 'Ошибка парсинга'))
+                    return                     
+
+            print('Рисую синусоиду')
             draw_sinusoid(self.matrix, x, y, i, j, os.getcwd() + f'/images/{self.filename}')
-            sinimg = QtGui.QPixmap(f'images/{self.filename}/one_sinusoid{x}_{y}_{i}_{j}.jpg')
+            
+            sinimg = QtGui.QPixmap(f'images/{self.filename}/one_sinusoid{x}_{y}_{i}_{j}.png')
             sinimg = sinimg.scaled(650, 300)
+
             self.sin.resize(sinimg.size())
             self.sin.setPixmap(sinimg)
-            self.once = False
-
             self.label.setText(_translate("MainWindow", self.filename))
 
+    # реакция на кнопку фиксации элемента
 
     def fixelem(self):
         _translate = QtCore.QCoreApplication.translate
@@ -2573,4 +2608,3 @@ class Ui_MainWindow(object):
                 self.statelabel.setText(_translate("MainWindow", ''))
                 self.isfixed = False           
                 self.sinButton.setText(_translate("MainWindow", "Фиксировать элемент"))
-

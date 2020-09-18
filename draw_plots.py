@@ -2,7 +2,6 @@
 #from vizualization_stuff.graph_3d import make_my_plot
 from vizualization_stuff.analytics_of_errors import sub_deviance, deviance, matrix_voltage_error, sub_meas, meas, sub_distance_meas
 from vizualization_stuff.sinusoids import color_mx, sinusoid_plot_norm, sinusoid_plot
-#from vizualization import show_plots
 
 from amplitude import meas_to_x
 from mammo_packets import read_from_file_binary, parse_mammograph_raw_data, mammograph_matrix
@@ -93,6 +92,15 @@ def txt_file_to_x(path, mammograph_matrix):
 					x[i, j] = lst[mammograph_matrix[i, j] - 1]
 	return x
 
+def save_plot(plot, path):
+	plot.savefig(path)
+	plot.close()
+
+def save_plot_img(img, path, title = ''):
+	fig = plt.figure(figsize=(5,5))
+	plt.imshow(img, cmap = 'hot')
+	plt.title(title)
+	save_plot(plt, path)
 
 def draw_plots(fname):
 
@@ -108,10 +116,8 @@ def draw_plots(fname):
 	#make_my_plot(x, figursize = (20,20), toSave = True, 
    # 	filename = f'vizualizations/images/{fname}/3dplot', euclid_colors = True)
 
-	fig = plt.figure(figsize=(10,10))
-	plt.imshow(matrix_voltage_error(x, mammograph_matrix), cmap = 'hot')
-	plt.savefig(f'vizualizations/images/{fname}/matrix_voltage_error.jpg')
-	plt.close()
+	save_plot_img(matrix_voltage_error(x, mammograph_matrix),
+		f'vizualizations/images/{fname}/matrix_voltage_error.png')
 
 	for act in ['l', 'g']:
 		for i in range(18):
@@ -126,24 +132,15 @@ def draw_plots(fname):
 				img2 = deviance(x, mammograph_matrix, (i, j, act), rank = 1)
 				img3 = meas(x, mammograph_matrix, (i, j, act), rank =1)
 
+				save_plot_img(img1, 
+					f'vizualizations/images/{fname}/slice{i}_{j}_{act}.png', title = 'slice')
 
-				fig = plt.figure(figsize=(5,5))
-				plt.imshow(img1, cmap = 'hot')
-				plt.title('slice')
-				plt.savefig(f'vizualizations/images/{fname}/slice{i}_{j}_{act}.jpg')
-				plt.close()
+				save_plot_img(img2, 
+					f'vizualizations/images/{fname}/deviance{i}_{j}_{act}.png', title = 'deviance')
 
-				fig = plt.figure(figsize=(5,5))
-				plt.imshow(img2, cmap = 'hot')
-				plt.title('deviance')
-				plt.savefig(f'vizualizations/images/{fname}/deviance{i}_{j}_{act}.jpg')
-				plt.close()
+				save_plot_img(img3, 
+					f'vizualizations/images/{fname}/meas{i}_{j}_{act}.png', title = 'meas')
 
-				fig = plt.figure(figsize=(5,5))
-				plt.imshow(img3, cmap = 'hot')
-				plt.title('meas')
-				plt.savefig(f'vizualizations/images/{fname}/meas{i}_{j}_{act}.jpg')	
-				plt.close()
 
 	#IMGSNAMES = os.listdir(f'vizualizations/images/{fname}')
 	#with ZipFile(f'vizualizations/images/{fname}/{fname[:-4]}.zip', 'w') as zipObj:
@@ -168,7 +165,7 @@ def draw_big_plots(meas_m, folder):
 	fig = plt.figure(figsize=(5,5))
 	plt.title('matrix voltage error')
 	plt.imshow(matrix_voltage_error(x, mammograph_matrix), cmap = 'hot')
-	plt.savefig(f'{folder}/matrix_voltage_error.jpg')
+	plt.savefig(f'{folder}/matrix_voltage_error.png')
 	plt.close()
 
 def draw_elements_plots(meas_m, folder, i, j, act):
@@ -185,36 +182,24 @@ def draw_elements_plots(meas_m, folder, i, j, act):
 	img2 = deviance(x, mammograph_matrix, (i, j, act), rank = 1)
 	img3 = meas(x, mammograph_matrix, (i, j, act), rank =1)
 
-	fig = plt.figure(figsize=(5,5))
-	plt.imshow(img1, cmap = 'hot')
-	plt.title('slice')
-	plt.savefig(f'{folder}/slice{i}_{j}_{act}.jpg')
-	plt.close()
+	save_plot_img(img1, 
+		f'{folder}/slice{i}_{j}_{act}.png', title = 'slice')
 
-	fig = plt.figure(figsize=(5,5))
-	plt.imshow(img2, cmap = 'hot')
-	plt.title('deviance')
-	plt.savefig(f'{folder}/deviance{i}_{j}_{act}.jpg')
-	plt.close()
+	save_plot_img(img2, 
+		f'{folder}/deviance{i}_{j}_{act}.png', title = 'deviance')
 
-	fig = plt.figure(figsize=(5,5))
-	plt.imshow(img3, cmap = 'hot')
-	plt.title('meas')
-	plt.savefig(f'{folder}/meas{i}_{j}_{act}.jpg')	
-	plt.close()
+	save_plot_img(img3, 
+		f'{folder}/meas{i}_{j}_{act}.png', title = 'meas')
 
-	plot = sinusoid_plot(meas_m, mammograph_matrix, i, j, act, color_mx)
-	plot.savefig(f'{folder}/sinusoid{i}_{j}_{act}.jpg')
-	plot.close()
+	save_plot(sinusoid_plot(meas_m, mammograph_matrix, i, j, act, color_mx), 
+		f'{folder}/sinusoid{i}_{j}_{act}.png')
 
-	plot = sinusoid_plot_norm(meas_m, mammograph_matrix, i, j, act, color_mx)
-	plot.savefig(f'{folder}/sinusoid_ampl{i}_{j}_{act}.jpg')
-	plot.close()
+	save_plot(sinusoid_plot_norm(meas_m, mammograph_matrix, i, j, act, color_mx), 
+		f'{folder}/sinusoid_ampl{i}_{j}_{act}.png')
 
 def draw_sinusoid(obj, x, y, i, j, folder):
 	fig = plt.figure(figsize=(10,5))
 	sins = obj[x,y,i,j]
 	sins = sins-(sum(sins)/len(sins))
 	plt.plot(sins)
-	plt.savefig(f'{folder}/one_sinusoid{x}_{y}_{i}_{j}.jpg')
-	plt.close()
+	save_plot(plt, f'{folder}/one_sinusoid{x}_{y}_{i}_{j}.png')
