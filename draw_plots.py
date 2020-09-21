@@ -105,11 +105,13 @@ def save_plot_img(img, path, title = ''):
 def draw_plots(fname):
 
 	parser = parse_mammograph_raw_data
+
 	if (fname[-4:]) == '.bin':
 		data = read_from_file_binary(BINSDIR + f'/{fname}')
 		arr = parser(data)
 		x = meas_to_x(arr)
 		x = x[0][0]
+
 	elif (fname[-4:]) == '.txt':
 		x = txt_file_to_x(BINSDIR + f'/{fname}', mammograph_matrix)
 
@@ -150,17 +152,24 @@ def draw_plots(fname):
 def get_matrix(path):
 
 	if (path[-4:]) == '.bin':
+
 		data = read_from_file_binary(path)
-		meas = parser(data)
+		x = parser(data)
 
-	#elif (fname[-4:]) == '.txt':
-	#	x = txt_file_to_x(BINSDIR + f'/{fname}', mammograph_matrix)
+	elif (path[-4:]) == '.txt':
 
-	return meas
+		x = txt_file_to_x(path, mammograph_matrix)
+
+	return x
 
 def draw_big_plots(meas_m, folder):
-	x = meas_to_x(meas_m)
-	x = x[0][0]
+
+	if (meas_m.shape[-1] == 80):
+		x = meas_to_x(meas_m)
+		x = x[0][0]
+
+	else:
+		x = meas_m
 
 	fig = plt.figure(figsize=(5,5))
 	plt.title('matrix voltage error')
@@ -169,8 +178,20 @@ def draw_big_plots(meas_m, folder):
 	plt.close()
 
 def draw_elements_plots(meas_m, folder, i, j, act):
-	x = meas_to_x(meas_m)
-	x = x[0][0]
+
+	if (meas_m.shape[-1] == 80):
+		x = meas_to_x(meas_m)
+		x = x[0][0]
+
+		save_plot(sinusoid_plot(meas_m, mammograph_matrix, i, j, act, color_mx), 
+		f'{folder}/sinusoid{i}_{j}_{act}.png')
+
+		save_plot(sinusoid_plot_norm(meas_m, mammograph_matrix, i, j, act, color_mx), 
+		f'{folder}/sinusoid_ampl{i}_{j}_{act}.png')
+
+	else:
+		x = meas_m
+
 
 	if (act == 'l'):
 
@@ -191,13 +212,14 @@ def draw_elements_plots(meas_m, folder, i, j, act):
 	save_plot_img(img3, 
 		f'{folder}/meas{i}_{j}_{act}.png', title = 'meas')
 
-	save_plot(sinusoid_plot(meas_m, mammograph_matrix, i, j, act, color_mx), 
-		f'{folder}/sinusoid{i}_{j}_{act}.png')
 
-	save_plot(sinusoid_plot_norm(meas_m, mammograph_matrix, i, j, act, color_mx), 
-		f'{folder}/sinusoid_ampl{i}_{j}_{act}.png')
 
 def draw_sinusoid(obj, x, y, i, j, folder):
+
+	if (obj.shape[-1] != 80):
+
+		return
+
 	fig = plt.figure(figsize=(10,5))
 	sins = obj[x,y,i,j]
 	sins = sins-(sum(sins)/len(sins))
