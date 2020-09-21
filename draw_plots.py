@@ -82,7 +82,7 @@ def txt_file_to_x(path, mammograph_matrix):
 			for i in range(18):
 				for j in range(18):
 					one_x[i, j] = int(line[i * 18 + j])
-				lst.append(one_x)
+			lst.append(one_x)
 
 		x = np.zeros((18, 18, 18, 18))
 
