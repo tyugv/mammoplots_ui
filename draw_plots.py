@@ -172,8 +172,8 @@ def draw_big_plots(meas_m, folder):
 		x = meas_m
 
 	save_plot_img(matrix_voltage_error(x, mammograph_matrix), path = f'{folder}/matrix_voltage_error.png', title = 'matrix voltage error')
-	save_plot_img([[x[i,j,i,j] for i in range(18)] for j in range(18)], path = f'{folder}/selfhot.png')
-	save_plot_img([[x[i,j,i,j] for i in range(18)] for j in range(18)], path = f'{folder}/selfviridis.png', cmap = 'viridis')
+	save_plot_img([[x[i,j,i,j] for i in range(18)] for j in range(18)], path = f'{folder}/selfhot.png', title = 'slice (i,j,i,j) in hot')
+	save_plot_img([[x[i,j,i,j] for i in range(18)] for j in range(18)], path = f'{folder}/selfviridis.png', title = 'slice (i,j,i,j) in viridis', cmap = 'viridis')
 
 
 def draw_elements_plots(meas_m, folder, i, j, act):
