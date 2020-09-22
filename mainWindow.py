@@ -12,7 +12,6 @@ class Ui_MainWindow(object):
 
         self.filename = None
         self.havematrix = False
-        #self.showwindplots = False
         self.isfixed = False
 
         MainWindow.setObjectName("MainWindow")
@@ -2406,12 +2405,17 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Файл не был выбран"))
         self.sinButton.setText(_translate("MainWindow", "Фиксировать элемент"))
 
-    # показать matrix_voltage_error
-    def show_mve(self):
+    # показать общие графики
+    def show_common_pics(self):
             errimg = QtGui.QPixmap(f'images/{self.filename}/matrix_voltage_error.png')
             errimg = errimg.scaled(350, 350)
             self.errormx.resize(errimg.size())
             self.errormx.setPixmap(errimg)  
+
+            # показать второе окно
+            self.plotswindow = PlotsWindow(sin1 = QtGui.QPixmap(os.getcwd() + f'/images/{self.filename}/selfhot.png'),
+            sin2 = QtGui.QPixmap(os.getcwd() + f'/images/{self.filename}/selfviridis.png'))
+            self.plotswindow.show()
 
     # реакция на нажатие кнопки выбора файла
 
@@ -2447,10 +2451,13 @@ class Ui_MainWindow(object):
 
         # если почему-то общие графики не отрисовались
 
-        if not'matrix_voltage_error.png' in os.listdir(os.getcwd() + f'/images/{self.filename}'):        
+        if not ('matrix_voltage_error.png' in os.listdir(os.getcwd() + f'/images/{self.filename}') 
+            and 'selfhot.png' in os.listdir(os.getcwd() + f'/images/{self.filename}') 
+            and 'selfviridis.png' in os.listdir(os.getcwd() + f'/images/{self.filename}')):  
+            print('imhere')      
             self.big_plots()
 
-        self.show_mve()
+        self.show_common_pics()
 
     # отрисовка общих графиков
 
@@ -2521,9 +2528,10 @@ class Ui_MainWindow(object):
             self.label.setText(_translate("MainWindow", 'Отрисовка изображения'))
             if not (f'slice{i}_{j}_{click}.png' in os.listdir(f'images/{self.filename}') and
             f'deviance{i}_{j}_{click}.png' in os.listdir(f'images/{self.filename}') and
-            f'meas{i}_{j}_{click}.png' in os.listdir(f'images/{self.filename}') and
-            f'sinusoid{i}_{j}_{click}.png' in os.listdir(f'images/{self.filename}') and
-            f'sinusoid_ampl{i}_{j}_{click}.png' in os.listdir(f'images/{self.filename}')):
+            f'meas{i}_{j}_{click}.png' in os.listdir(f'images/{self.filename}')): 
+            #and
+            #f'sinusoid{i}_{j}_{click}.png' in os.listdir(f'images/{self.filename}') and
+            #f'sinusoid_ampl{i}_{j}_{click}.png' in os.listdir(f'images/{self.filename}')):
                 self.little_plots(i, j, click)
 
             sliceimg = QtGui.QPixmap(f'images/{self.filename}/slice{i}_{j}_{click}.png')
@@ -2540,13 +2548,6 @@ class Ui_MainWindow(object):
             measimg = measimg.scaled(350, 350)
             self.meas.resize(measimg.size())
             self.meas.setPixmap(measimg)
-
-            # показать второе окно
-            #self.plotswindow = PlotsWindow(sin1 = QtGui.QPixmap(os.getcwd() + f'/images/{self.filename}/sinusoid{i}_{j}_{click}.png'),
-            #sin2 = QtGui.QPixmap(os.getcwd() + f'/images/{self.filename}/sinusoid_ampl{i}_{j}_{click}.png'))
-            #if not (self.showwindplots):
-            #self.plotswindow.show()
-            #    self.showwindplots = True
 
             self.x = i
             self.y = j

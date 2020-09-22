@@ -1,6 +1,6 @@
 #from vizualization_stuff.distplots import make_distplot_gif, dist_to_3d, dist_of_array
 #from vizualization_stuff.graph_3d import make_my_plot
-from vizualization_stuff.analytics_of_errors import sub_deviance, deviance, matrix_voltage_error, sub_meas, meas, sub_distance_meas
+from vizualization_stuff.analytics_of_errors import sub_deviance, deviance, matrix_voltage_error, sub_distance_meas, meas
 from vizualization_stuff.sinusoids import color_mx, sinusoid_plot_norm, sinusoid_plot
 
 from amplitude import meas_to_x
@@ -96,9 +96,9 @@ def save_plot(plot, path):
 	plot.savefig(path)
 	plot.close()
 
-def save_plot_img(img, path, title = ''):
+def save_plot_img(img, path, title = '', cmap = 'hot'):
 	fig = plt.figure(figsize=(5,5))
-	plt.imshow(img, cmap = 'hot')
+	plt.imshow(img, cmap=cmap, interpolation='none')
 	plt.title(title)
 	save_plot(plt, path)
 
@@ -171,11 +171,10 @@ def draw_big_plots(meas_m, folder):
 	else:
 		x = meas_m
 
-	fig = plt.figure(figsize=(5,5))
-	plt.title('matrix voltage error')
-	plt.imshow(matrix_voltage_error(x, mammograph_matrix), cmap = 'hot')
-	plt.savefig(f'{folder}/matrix_voltage_error.png')
-	plt.close()
+	save_plot_img(matrix_voltage_error(x, mammograph_matrix), path = f'{folder}/matrix_voltage_error.png', title = 'matrix voltage error')
+	save_plot_img([[x[i,j,i,j] for i in range(18)] for j in range(18)], path = f'{folder}/selfhot.png')
+	save_plot_img([[x[i,j,i,j] for i in range(18)] for j in range(18)], path = f'{folder}/selfviridis.png', cmap = 'viridis')
+
 
 def draw_elements_plots(meas_m, folder, i, j, act):
 
@@ -183,11 +182,11 @@ def draw_elements_plots(meas_m, folder, i, j, act):
 		x = meas_to_x(meas_m)
 		x = x[0][0]
 
-		save_plot(sinusoid_plot(meas_m, mammograph_matrix, i, j, act, color_mx), 
-		f'{folder}/sinusoid{i}_{j}_{act}.png')
+		#save_plot(sinusoid_plot(meas_m, mammograph_matrix, i, j, act, color_mx), 
+		#f'{folder}/sinusoid{i}_{j}_{act}.png')
 
-		save_plot(sinusoid_plot_norm(meas_m, mammograph_matrix, i, j, act, color_mx), 
-		f'{folder}/sinusoid_ampl{i}_{j}_{act}.png')
+		#save_plot(sinusoid_plot_norm(meas_m, mammograph_matrix, i, j, act, color_mx), 
+		#f'{folder}/sinusoid_ampl{i}_{j}_{act}.png')
 
 	else:
 		x = meas_m
