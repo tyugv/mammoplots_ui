@@ -174,11 +174,6 @@ def draw_big_plots(meas_m, folder):
 		mn = np.mean(sar[:, :, :, :, :PERIODS], axis=4)
 		r = mx - mn
 
-		result = np.zeros((18, 18))
-		for i in range(18):
-			for j in range(18):
-				result[i, j] = r[i, j, i, j]
-
 		save_plot_img([[r[i,j,i,j] for j in range(18)] for i in range(18)], path = f'{folder}/selfhot.png', title = 'slice (i,j,i,j) in hot')
 		save_plot_img([[r[i,j,i,j] for j in range(18)] for i in range(18)], path = f'{folder}/selfviridis.png', title = 'slice (i,j,i,j) in viridis', cmap = 'viridis')
 
