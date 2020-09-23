@@ -168,12 +168,21 @@ def draw_big_plots(meas_m, folder):
 		x = meas_to_x(meas_m)
 		x = x[0][0]
 
+		sar = np.sort(meas_m, axis=4)
+		PERIODS = 1
+		mx = np.mean(sar[:, :, :, :, -PERIODS:], axis=4)
+		mn = np.mean(sar[:, :, :, :, :PERIODS], axis=4)
+		r = mx - mn
+		save_plot_img([[r[i,j,i,j] for i in range(18)] for j in range(18)], path = f'{folder}/selfhot.png', title = 'slice (i,j,i,j) in hot')
+		save_plot_img([[r[i,j,i,j] for i in range(18)] for j in range(18)], path = f'{folder}/selfviridis.png', title = 'slice (i,j,i,j) in viridis', cmap = 'viridis')
+
 	else:
+
 		x = meas_m
+		save_plot_img([[x[i,j,i,j] for i in range(18)] for j in range(18)], path = f'{folder}/selfhot.png', title = 'slice (i,j,i,j) in hot')
+		save_plot_img([[x[i,j,i,j] for i in range(18)] for j in range(18)], path = f'{folder}/selfviridis.png', title = 'slice (i,j,i,j) in viridis', cmap = 'viridis')
 
 	save_plot_img(matrix_voltage_error(x, mammograph_matrix), path = f'{folder}/matrix_voltage_error.png', title = 'matrix voltage error')
-	save_plot_img([[x[i,j,i,j] for i in range(18)] for j in range(18)], path = f'{folder}/selfhot.png', title = 'slice (i,j,i,j) in hot')
-	save_plot_img([[x[i,j,i,j] for i in range(18)] for j in range(18)], path = f'{folder}/selfviridis.png', title = 'slice (i,j,i,j) in viridis', cmap = 'viridis')
 
 
 def draw_elements_plots(meas_m, folder, i, j, act):
