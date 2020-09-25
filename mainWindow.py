@@ -15,7 +15,7 @@ class Ui_MainWindow(object):
         self.isfixed = False
 
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1500, 750)
+        MainWindow.resize(1500, 820)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
@@ -2371,10 +2371,10 @@ class Ui_MainWindow(object):
         self.slice.move(1000, 10)
 
         self.meas = QtWidgets.QLabel(self)
-        self.meas.move(1000, 360)
+        self.meas.move(1000, 400)
 
         self.deviance = QtWidgets.QLabel(self)
-        self.deviance.move(650, 360)
+        self.deviance.move(650, 400)
 
         self.errormx = QtWidgets.QLabel(self)
         self.errormx.move(650, 10)
@@ -2408,13 +2408,13 @@ class Ui_MainWindow(object):
     # показать общие графики
     def show_common_pics(self):
             errimg = QtGui.QPixmap(f'images/{self.filename}/matrix_voltage_error.png')
-            errimg = errimg.scaled(350, 350)
+            #errimg = errimg.scaled(350, 350)
             self.errormx.resize(errimg.size())
             self.errormx.setPixmap(errimg)  
 
             # показать второе окно
-            self.plotswindow = PlotsWindow(sin1 = QtGui.QPixmap(os.getcwd() + f'/images/{self.filename}/selfhot.png'),
-            sin2 = QtGui.QPixmap(os.getcwd() + f'/images/{self.filename}/selfviridis.png'))
+            self.plotswindow = PlotsWindow(img1 = QtGui.QPixmap(os.getcwd() + f'/images/{self.filename}/selfhot.png'),
+            img2 = QtGui.QPixmap(os.getcwd() + f'/images/{self.filename}/selfviridis.png'))
             self.plotswindow.show()
 
     # реакция на нажатие кнопки выбора файла
@@ -2535,17 +2535,17 @@ class Ui_MainWindow(object):
                 self.little_plots(i, j, click)
 
             sliceimg = QtGui.QPixmap(f'images/{self.filename}/slice{i}_{j}_{click}.png')
-            sliceimg = sliceimg.scaled(350, 350)
+            #sliceimg = sliceimg.scaled(350, 350)
             self.slice.resize(sliceimg.size())
             self.slice.setPixmap(sliceimg)
 
             devianceimg = QtGui.QPixmap(f'images/{self.filename}/deviance{i}_{j}_{click}.png')
-            devianceimg = devianceimg.scaled(350, 350)
+            #devianceimg = devianceimg.scaled(350, 350)
             self.deviance.resize(devianceimg.size())
             self.deviance.setPixmap(devianceimg)
 
             measimg = QtGui.QPixmap(f'images/{self.filename}/meas{i}_{j}_{click}.png')
-            measimg = measimg.scaled(350, 350)
+            #measimg = measimg.scaled(350, 350)
             self.meas.resize(measimg.size())
             self.meas.setPixmap(measimg)
 
@@ -2584,7 +2584,7 @@ class Ui_MainWindow(object):
             draw_sinusoid(self.matrix, x, y, i, j, os.getcwd() + f'/images/{self.filename}')
             
             sinimg = QtGui.QPixmap(f'images/{self.filename}/one_sinusoid{x}_{y}_{i}_{j}.png')
-            sinimg = sinimg.scaled(650, 300)
+            #sinimg = sinimg.scaled(650, 300)
 
             self.sin.resize(sinimg.size())
             self.sin.setPixmap(sinimg)

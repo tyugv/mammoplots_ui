@@ -97,7 +97,7 @@ def save_plot(plot, path):
 	plot.close()
 
 def save_plot_img(img, path, title = '', cmap = 'hot'):
-	fig = plt.figure(figsize=(5,5))
+	fig = plt.figure(figsize=(4,4))
 	plt.imshow(img, cmap=cmap, interpolation='none')
 	plt.title(title)
 	save_plot(plt, path)
@@ -229,7 +229,7 @@ def draw_sinusoid(obj, x, y, i, j, folder):
 
 		return
 
-	fig = plt.figure(figsize=(10,5))
+	fig = plt.figure(figsize=(6,4))
 	sins = obj[x,y,i,j]
 	sins = sins-(sum(sins)/len(sins))
 	plt.plot(sins)
