@@ -15,7 +15,7 @@ class Ui_MainWindow(object):
         self.isfixed = False
 
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1500, 820)
+        MainWindow.resize(1700, 850)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
@@ -2368,19 +2368,22 @@ class Ui_MainWindow(object):
         self.statelabel.setObjectName("statelabel")
 
         self.slice = QtWidgets.QLabel(self)
-        self.slice.move(1000, 10)
+        self.slice.move(1270, 10)
 
         self.meas = QtWidgets.QLabel(self)
-        self.meas.move(1000, 400)
+        self.meas.move(1270, 400)
 
         self.deviance = QtWidgets.QLabel(self)
-        self.deviance.move(650, 400)
+        self.deviance.move(920, 400)
 
         self.errormx = QtWidgets.QLabel(self)
-        self.errormx.move(650, 10)
+        self.errormx.move(920, 10)
 
         self.sin = QtWidgets.QLabel(self)
-        self.sin.move(10, 420)
+        self.sin.move(200, 420)
+
+        self.sinfft = QtWidgets.QLabel(self)
+        self.sinfft.move(410, 50)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -2583,11 +2586,14 @@ class Ui_MainWindow(object):
             print('Рисую синусоиду')
             draw_sinusoid(self.matrix, x, y, i, j, os.getcwd() + f'/images/{self.filename}')
             
-            sinimg = QtGui.QPixmap(f'images/{self.filename}/one_sinusoid{x}_{y}_{i}_{j}.png')
-            #sinimg = sinimg.scaled(650, 300)
-
+            sinimg = QtGui.QPixmap(f'images/{self.filename}/one_sinusoid{x}_{y}_{i}_{j}.png')           
             self.sin.resize(sinimg.size())
             self.sin.setPixmap(sinimg)
+
+            sinFTimg = QtGui.QPixmap(f'images/{self.filename}/sinusoid_fft{x}_{y}_{i}_{j}.png')
+            self.sinfft.resize(sinFTimg.size())
+            self.sinfft.setPixmap(sinFTimg)
+
             self.label.setText(_translate("MainWindow", self.filename))
 
     # реакция на кнопку фиксации элемента

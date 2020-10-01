@@ -1,7 +1,7 @@
 #from vizualization_stuff.distplots import make_distplot_gif, dist_to_3d, dist_of_array
 #from vizualization_stuff.graph_3d import make_my_plot
 from vizualization_stuff.analytics_of_errors import sub_deviance, deviance, matrix_voltage_error, sub_distance_meas, meas
-from vizualization_stuff.sinusoids import color_mx, sinusoid_plot_norm, sinusoid_plot
+from vizualization_stuff.sinusoids import color_mx, sinusoid_plot_norm, sinusoid_plot, FourierPlot
 
 from amplitude import meas_to_x
 from mammo_packets import read_from_file_binary, parse_mammograph_raw_data, mammograph_matrix
@@ -233,4 +233,7 @@ def draw_sinusoid(obj, x, y, i, j, folder):
 	sins = obj[x,y,i,j]
 	sins = sins-(sum(sins)/len(sins))
 	plt.plot(sins)
+	plt.title('Sinusoid plot')
 	save_plot(plt, f'{folder}/one_sinusoid{x}_{y}_{i}_{j}.png')
+
+	save_plot(FourierPlot(obj[x,y,i,j], size = (5, 3)), f'{folder}/sinusoid_fft{x}_{y}_{i}_{j}.png')

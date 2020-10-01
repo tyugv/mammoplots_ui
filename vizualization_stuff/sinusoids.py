@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
+from scipy import fftpack
+
 
 color_mx = np.array([['#00000000', '#00000000', '#00000000', '#00ff5503', '#00000000',
         '#00000000', '#42ff002a', '#5cff0063', '#76ff0085', '#96ff0086',
@@ -138,3 +140,17 @@ def sinusoid_plot_norm(obj, MammographMatrix, x, y, act, color_mx):
 
   return plt
 
+def FourierPlot(sins, size = (5, 4)):
+
+  fig = plt.figure(figsize=size)
+
+  N = len(sins)
+
+  fft = fftpack.fft(sins) 
+  spectrum = 2/N * np.abs(fft[:int(N/2)]) # positive freqs only
+
+  plt.title('FourierTransform')
+  plt.grid()
+  plt.stem(spectrum, use_line_collection=True, basefmt='C0')
+
+  return plt
