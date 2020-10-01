@@ -149,7 +149,7 @@ def FourierPlot(sins, size = (5, 4)):
   fft = fftpack.fft(sins) 
   spectrum = 2/N * np.abs(fft[:int(N/2)]) # positive freqs only
 
-  plt.title('FourierTransform')
+  plt.title('Fourier Transform')
   plt.grid()
   plt.stem(spectrum, use_line_collection=True, basefmt='C0')
 
