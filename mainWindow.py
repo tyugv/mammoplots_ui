@@ -2552,6 +2552,17 @@ class Ui_MainWindow(object):
             self.meas.resize(measimg.size())
             self.meas.setPixmap(measimg)
 
+            print('Рисую синусоиду')
+            draw_sinusoid(self.matrix, i, j, i, j, os.getcwd() + f'/images/{self.filename}')
+            
+            sinimg = QtGui.QPixmap(f'images/{self.filename}/one_sinusoid{i}_{j}_{i}_{j}.png')           
+            self.sin.resize(sinimg.size())
+            self.sin.setPixmap(sinimg)
+
+            sinFTimg = QtGui.QPixmap(f'images/{self.filename}/sinusoid_fft{i}_{j}_{i}_{j}.png')
+            self.sinfft.resize(sinFTimg.size())
+            self.sinfft.setPixmap(sinFTimg)
+
             self.x = i
             self.y = j
             self.state = click
