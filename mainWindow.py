@@ -1,6 +1,7 @@
 import os
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QFont
 from plotsWindow import PlotsWindow, Ui_PlotsWindow
 
 from draw_plots import get_matrix, draw_big_plots, draw_elements_plots, draw_sinusoid
@@ -19,7 +20,7 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 40, 381, 321))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(35, 60, 391, 341))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -2355,7 +2356,7 @@ class Ui_MainWindow(object):
 
         self.sinButton = QtWidgets.QPushButton(self.centralwidget)
         self.sinButton.setEnabled(True)
-        self.sinButton.setGeometry(QtCore.QRect(10, 370, 130, 21))
+        self.sinButton.setGeometry(QtCore.QRect(10, 410, 130, 21))
         self.sinButton.setObjectName("pushButton")
         self.sinButton.clicked.connect(self.fixelem) 
 
@@ -2367,23 +2368,31 @@ class Ui_MainWindow(object):
         self.statelabel.setGeometry(QtCore.QRect(10, 395, 500, 21))
         self.statelabel.setObjectName("statelabel")
 
+        self.goriz_label = QtWidgets.QLabel(self.centralwidget)
+        self.goriz_label.move(35, 40)
+        self.goriz_label.setFont(QFont('Arial', 11)) 
+
+        self.vertic_label = QtWidgets.QLabel(self.centralwidget)
+        self.vertic_label.move(10, 60)
+        self.vertic_label.setFont(QFont('Arial', 12)) 
+
         self.slice = QtWidgets.QLabel(self)
-        self.slice.move(1270, 10)
+        self.slice.move(1290, 10)
 
         self.meas = QtWidgets.QLabel(self)
-        self.meas.move(1270, 400)
+        self.meas.move(1290, 400)
 
         self.deviance = QtWidgets.QLabel(self)
-        self.deviance.move(920, 400)
+        self.deviance.move(940, 400)
 
         self.errormx = QtWidgets.QLabel(self)
-        self.errormx.move(920, 10)
+        self.errormx.move(940, 10)
 
         self.sin = QtWidgets.QLabel(self)
-        self.sin.move(200, 420)
+        self.sin.move(220, 420)
 
         self.sinfft = QtWidgets.QLabel(self)
-        self.sinfft.move(410, 50)
+        self.sinfft.move(435, 50)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -2407,6 +2416,8 @@ class Ui_MainWindow(object):
         self.pushButton.setText(_translate("MainWindow", "Выберите файл"))
         self.label.setText(_translate("MainWindow", "Файл не был выбран"))
         self.sinButton.setText(_translate("MainWindow", "Фиксировать элемент"))
+        self.goriz_label.setText(_translate("MainWindow", "1    2    3    4    5   6   7   8   9   10  11  12 13  14  15 16  17 18"))
+        self.vertic_label.setText(_translate("MainWindow", "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18"))
 
     # показать общие графики
     def show_common_pics(self):
@@ -2502,6 +2513,8 @@ class Ui_MainWindow(object):
 
         print('Рисую графики')
         draw_elements_plots(self.matrix, os.getcwd() + f'/images/{self.filename}', i, j, click)
+        print('Рисую синусоиду')
+        draw_sinusoid(self.matrix, i, j, i, j, os.getcwd() + f'/images/{self.filename}')
         self.label.setText(_translate("MainWindow", f'{self.filename}'))
 
     # реакция при нажатии на кнопку отдельного элемента
@@ -2551,9 +2564,6 @@ class Ui_MainWindow(object):
             #measimg = measimg.scaled(350, 350)
             self.meas.resize(measimg.size())
             self.meas.setPixmap(measimg)
-
-            print('Рисую синусоиду')
-            draw_sinusoid(self.matrix, i, j, i, j, os.getcwd() + f'/images/{self.filename}')
             
             sinimg = QtGui.QPixmap(f'images/{self.filename}/one_sinusoid{i}_{j}_{i}_{j}.png')           
             self.sin.resize(sinimg.size())
