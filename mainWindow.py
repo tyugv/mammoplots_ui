@@ -2356,16 +2356,16 @@ class Ui_MainWindow(object):
 
         self.sinButton = QtWidgets.QPushButton(self.centralwidget)
         self.sinButton.setEnabled(True)
-        self.sinButton.setGeometry(QtCore.QRect(10, 410, 130, 21))
+        self.sinButton.setGeometry(QtCore.QRect(10, 410, 132, 21))
         self.sinButton.setObjectName("pushButton")
         self.sinButton.clicked.connect(self.fixelem) 
 
         self.sinlabel = QtWidgets.QLabel(self.centralwidget)
-        self.sinlabel.setGeometry(QtCore.QRect(140, 370, 500, 21))
+        self.sinlabel.setGeometry(QtCore.QRect(145, 410, 500, 21))
         self.sinlabel.setObjectName("sinlabel")
 
         self.statelabel = QtWidgets.QLabel(self.centralwidget)
-        self.statelabel.setGeometry(QtCore.QRect(10, 395, 500, 21))
+        self.statelabel.setGeometry(QtCore.QRect(10, 425, 500, 21))
         self.statelabel.setObjectName("statelabel")
 
         self.goriz_label = QtWidgets.QLabel(self.centralwidget)
@@ -2389,7 +2389,7 @@ class Ui_MainWindow(object):
         self.errormx.move(940, 10)
 
         self.sin = QtWidgets.QLabel(self)
-        self.sin.move(220, 420)
+        self.sin.move(220, 435)
 
         self.sinfft = QtWidgets.QLabel(self)
         self.sinfft.move(435, 50)
