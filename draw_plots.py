@@ -168,14 +168,8 @@ def draw_big_plots(meas_m, folder):
 		x = meas_to_x(meas_m)
 		x = x[0][0]
 
-		sar = np.sort(meas_m, axis=4)
-		PERIODS = 1
-		mx = np.mean(sar[:, :, :, :, -PERIODS:], axis=4)
-		mn = np.mean(sar[:, :, :, :, :PERIODS], axis=4)
-		r = mx - mn
-
-		save_plot_img([[r[i,j,i,j] for j in range(18)] for i in range(18)], path = f'{folder}/selfhot.png', title = 'slice (i,j,i,j) in hot')
-		save_plot_img([[r[i,j,i,j] for j in range(18)] for i in range(18)], path = f'{folder}/selfviridis.png', title = 'slice (i,j,i,j) in viridis', cmap = 'viridis')
+		save_plot_img([[x[i,j,i,j] for j in range(18)] for i in range(18)], path = f'{folder}/selfhot.png', title = 'slice (i,j,i,j) in hot')
+		save_plot_img([[x[i,j,i,j] for j in range(18)] for i in range(18)], path = f'{folder}/selfviridis.png', title = 'slice (i,j,i,j) in viridis', cmap = 'viridis')
 
 	else:
 
@@ -235,7 +229,6 @@ def draw_sinusoid(obj, x, y, i, j, folder):
 
 	fig = plt.figure(figsize=(6,4))
 	sins = obj[x,y,i,j]
-	sins = sins-(sum(sins)/len(sins))
 	plt.plot(sins)
 	plt.title('Sinusoid plot')
 	save_plot(plt, f'{folder}/one_sinusoid{x}_{y}_{i}_{j}.png')

@@ -2527,8 +2527,8 @@ class Ui_MainWindow(object):
             self.label.setText(_translate("MainWindow", 'Файл не выбран'))
             return
 
-        i = (num - 1) // 18
-        j = (num - 1) % 18
+        i = (num - 1) % 18
+        j = (num - 1) // 18
         print((i, j))
         if (click == 'LC'):
             print ('listener')
@@ -2583,9 +2583,9 @@ class Ui_MainWindow(object):
             self.label.setText(_translate("MainWindow", 'Отрисовка изображения'))
 
             if (self.state == 'g'):
-                self.statelabel.setText(_translate("MainWindow", f'Слушатель ({j},{i})'))
+                self.statelabel.setText(_translate("MainWindow", f'Слушатель ({i},{j})'))
             else:
-                self.statelabel.setText(_translate("MainWindow", f'Генератор ({j},{i})'))
+                self.statelabel.setText(_translate("MainWindow", f'Генератор ({i},{j})'))
             if (self.state == 'g'):
                 x = i
                 y = j
@@ -2628,7 +2628,7 @@ class Ui_MainWindow(object):
                     actor = 'Слушатель'
                 else:
                     actor = 'Генератор'
-                self.sinlabel.setText(_translate("MainWindow", f'{actor} ({self.y}, {self.x}) зафиксирован'))
+                self.sinlabel.setText(_translate("MainWindow", f'{actor} ({self.x}, {self.y}) зафиксирован'))
                 self.isfixed = True
                 self.sinButton.setText(_translate("MainWindow", "Не фиксировать элемент"))
             else:
