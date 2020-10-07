@@ -209,10 +209,12 @@ def draw_elements_plots(meas_m, folder, i, j, act):
 	else:
 		img1 = x[:, :, i, j]
 
-	img1[i,j] = 0
-
 	img2 = deviance(x, mammograph_matrix, (i, j, act), rank = 1)
 	img3 = meas(x, mammograph_matrix, (i, j, act), rank =1)
+
+	img1[i,j] = 0
+	img2[i,j] = 0
+	img3[i,j] = 0
 
 	save_plot_img(img1, 
 		f'{folder}/slice{i}_{j}_{act}.png', title = 'slice')
