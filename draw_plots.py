@@ -210,13 +210,13 @@ def draw_elements_plots(meas_m, folder, i, j, act):
 	img2[i,j] = 0
 	img3[i,j] = 0
 
-	save_plot_img(img1, 
+	save_plot_img(img1.T, 
 		f'{folder}/slice{i}_{j}_{act}.png', title = 'slice')
 
-	save_plot_img(img2, 
+	save_plot_img(img2.T, 
 		f'{folder}/deviance{i}_{j}_{act}.png', title = 'deviance')
 
-	save_plot_img(img3, 
+	save_plot_img(img3.T, 
 		f'{folder}/meas{i}_{j}_{act}.png', title = 'meas')
 
 

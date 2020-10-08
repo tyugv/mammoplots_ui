@@ -30,7 +30,7 @@ class Amplitude:
 
 def max_min_approximate_aplitude(meas, PERIODS = 1):
     meas = np.sort(meas, axis=4)
-    return (np.mean(meas[:, :, :, :, -PERIODS:], axis = 4) - np.mean(meas[:, :, :, :, :PERIODS], axis = 4)) / 2
+    return np.abs(meas[:, :, :, :, -PERIODS:] - meas[:, :, :, :, :PERIODS]) / 2
 
 
 def meas_to_x(meas: np.array = np.zeros((18, 18, 18, 18, 80))):
