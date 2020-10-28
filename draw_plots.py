@@ -1,6 +1,4 @@
-#from vizualization_stuff.distplots import make_distplot_gif, dist_to_3d, dist_of_array
-#from vizualization_stuff.graph_3d import make_my_plot
-from vizualization_stuff.analytics_of_errors import sub_deviance, deviance, matrix_voltage_error, sub_distance_meas, meas
+from vizualization_stuff.analytics_of_errors import filter_err, sinus_mean
 from vizualization_stuff.sinusoids import color_mx, sinusoid_plot_norm, sinusoid_plot, FourierPlot
 
 from amplitude import meas_to_x
@@ -100,6 +98,7 @@ def save_plot_img(img, path, title = '', cmap = 'hot'):
 	fig = plt.figure(figsize=(4,4))
 	plt.imshow(img, cmap=cmap, interpolation='none')
 	plt.title(title)
+	plt.colorbar()
 	save_plot(plt, path)
 
 def draw_plots(fname):
@@ -115,39 +114,16 @@ def draw_plots(fname):
 	elif (fname[-4:]) == '.txt':
 		x = txt_file_to_x(BINSDIR + f'/{fname}', mammograph_matrix)
 
-	#make_my_plot(x, figursize = (20,20), toSave = True, 
-   # 	filename = f'vizualizations/images/{fname}/3dplot', euclid_colors = True)
-
-	save_plot_img(matrix_voltage_error(x, mammograph_matrix),
-		f'vizualizations/images/{fname}/matrix_voltage_error.png')
-
 	for act in ['l', 'g']:
 		for i in range(18):
 			for j in range(18):
 				if (act == 'l'):
 					img1 = x[i, j, :, :]
-
 				else:
 					img1 = x[:, :, i, j]
-
-				# возможно стоит поменять аргументы
-				img2 = deviance(x, mammograph_matrix, (i, j, act), rank = 1)
-				img3 = meas(x, mammograph_matrix, (i, j, act), rank =1)
-
 				save_plot_img(img1, 
 					f'vizualizations/images/{fname}/slice{i}_{j}_{act}.png', title = 'slice')
 
-				save_plot_img(img2, 
-					f'vizualizations/images/{fname}/deviance{i}_{j}_{act}.png', title = 'deviance')
-
-				save_plot_img(img3, 
-					f'vizualizations/images/{fname}/meas{i}_{j}_{act}.png', title = 'meas')
-
-
-	#IMGSNAMES = os.listdir(f'vizualizations/images/{fname}')
-	#with ZipFile(f'vizualizations/images/{fname}/{fname[:-4]}.zip', 'w') as zipObj:
-	#	for imgname in IMGSNAMES:
-	#		zipObj.write(f'vizualizations/images/{fname}/{imgname}', fname + '/' + imgname)
 
 def get_matrix(path):
 
@@ -177,7 +153,7 @@ def draw_big_plots(meas_m, folder):
 		save_plot_img([[x[i,j,i,j] for j in range(18)] for i in range(18)], path = f'{folder}/selfhot.png', title = 'slice (i,j,i,j) in hot')
 		save_plot_img([[x[i,j,i,j] for j in range(18)] for i in range(18)], path = f'{folder}/selfviridis.png', title = 'slice (i,j,i,j) in viridis', cmap = 'viridis')
 
-	save_plot_img(matrix_voltage_error(x, mammograph_matrix), path = f'{folder}/matrix_voltage_error.png', title = 'matrix voltage error')
+	#save_plot_img(matrix_voltage_error(x, mammograph_matrix), path = f'{folder}/matrix_voltage_error.png', title = 'matrix voltage error')
 
 
 def draw_elements_plots(meas_m, folder, i, j, act):
@@ -186,12 +162,6 @@ def draw_elements_plots(meas_m, folder, i, j, act):
 		x = meas_to_x(meas_m)
 		x = x[0][0]
 
-		#save_plot(sinusoid_plot(meas_m, mammograph_matrix, i, j, act, color_mx), 
-		#f'{folder}/sinusoid{i}_{j}_{act}.png')
-
-		#save_plot(sinusoid_plot_norm(meas_m, mammograph_matrix, i, j, act, color_mx), 
-		#f'{folder}/sinusoid_ampl{i}_{j}_{act}.png')
-
 	else:
 		x = meas_m
 
@@ -199,12 +169,14 @@ def draw_elements_plots(meas_m, folder, i, j, act):
 	if (act == 'l'):
 
 		img1 = x[i, j, :, :]
+		arr = meas_m[i, j, :, :]
 
 	else:
 		img1 = x[:, :, i, j]
+		arr = meas_m[:, :, i, j]
 
-	img2 = deviance(x, mammograph_matrix, (i, j, act), rank = 1)
-	img3 = meas(x, mammograph_matrix, (i, j, act), rank =1)
+	img2 = filter_err(arr, mammograph_matrix)
+	img3 = sinus_mean(arr, mammograph_matrix)
 
 	img1[i,j] = 0
 	img2[i,j] = 0
@@ -214,10 +186,10 @@ def draw_elements_plots(meas_m, folder, i, j, act):
 		f'{folder}/slice{i}_{j}_{act}.png', title = 'slice')
 
 	save_plot_img(img2.T, 
-		f'{folder}/deviance{i}_{j}_{act}.png', title = 'deviance')
+		f'{folder}/filter_err{i}_{j}_{act}.png', title = 'error with filter')
 
 	save_plot_img(img3.T, 
-		f'{folder}/meas{i}_{j}_{act}.png', title = 'meas')
+		f'{folder}/sinus_mean{i}_{j}_{act}.png', title = 'deviation')
 
 
 

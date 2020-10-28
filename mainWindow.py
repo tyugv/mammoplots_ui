@@ -2421,7 +2421,7 @@ class Ui_MainWindow(object):
 
     # показать общие графики
     def show_common_pics(self):
-            errimg = QtGui.QPixmap(f'images/{self.filename}/matrix_voltage_error.png')
+            errimg = QtGui.QPixmap(f'images/{self.filename}/selfhot.png')
             #errimg = errimg.scaled(350, 350)
             self.errormx.resize(errimg.size())
             self.errormx.setPixmap(errimg)  
@@ -2465,8 +2465,7 @@ class Ui_MainWindow(object):
 
         # если почему-то общие графики не отрисовались
 
-        if not ('matrix_voltage_error.png' in os.listdir(os.getcwd() + f'/images/{self.filename}') 
-            and 'selfhot.png' in os.listdir(os.getcwd() + f'/images/{self.filename}') 
+        if not ('selfhot.png' in os.listdir(os.getcwd() + f'/images/{self.filename}') 
             and 'selfviridis.png' in os.listdir(os.getcwd() + f'/images/{self.filename}')):  
             print('imhere')      
             self.big_plots()
@@ -2555,12 +2554,12 @@ class Ui_MainWindow(object):
             self.slice.resize(sliceimg.size())
             self.slice.setPixmap(sliceimg)
 
-            devianceimg = QtGui.QPixmap(f'images/{self.filename}/deviance{i}_{j}_{click}.png')
+            devianceimg = QtGui.QPixmap(f'images/{self.filename}/filter_err{i}_{j}_{click}.png')
             #devianceimg = devianceimg.scaled(350, 350)
             self.deviance.resize(devianceimg.size())
             self.deviance.setPixmap(devianceimg)
 
-            measimg = QtGui.QPixmap(f'images/{self.filename}/meas{i}_{j}_{click}.png')
+            measimg = QtGui.QPixmap(f'images/{self.filename}/sinus_mean{i}_{j}_{click}.png')
             #measimg = measimg.scaled(350, 350)
             self.meas.resize(measimg.size())
             self.meas.setPixmap(measimg)

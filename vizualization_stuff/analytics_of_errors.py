@@ -2,6 +2,38 @@ import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+
+##№ -------------- фильтр ------------------------###
+
+NCoef = 2
+DCgain = 32
+
+ACoef = [112, 0, -112]
+BCoef = [64, -117, 57]
+
+
+def filter(x):
+    y = np.zeros_like(x)
+
+    for i in range(NCoef, x.shape[0]):
+        y[i] = ACoef[0] * x[i]
+        for j in range(1, NCoef + 1):
+            y[i] += ACoef[j] * x[i - j] - BCoef[j] * y[i - j]
+
+        y[i] /= BCoef[0]
+
+    return y / DCgain
+
+def aug_signal(signal):
+    augmented_signal = np.zeros(signal.shape[0] * 2)
+    for i in range(signal.shape[0]):
+        augmented_signal[i] = signal[i]
+
+    for i in range(signal.shape[0], augmented_signal.shape[0]):
+        augmented_signal[i] = augmented_signal[i - 24]
+    return augmented_signal
+
+
 ### -------------- отклонение от соседей ---------- ###
 
 def sub_deviance(obj, i, j, k, l, rank = 1):
@@ -164,3 +196,25 @@ def sub_distance_meas(obj, x_in, y_in, x_out, y_out, rank = 1):
     except ZeroDivisionError:
         return result
 
+
+def filter_err(obj, MammographMatrix):
+  f = lambda x: filter(aug_signal(filter(aug_signal(x[-78:])))[::-1])[-80:]
+  new_x = np.zeros((18, 18))
+  matrix = MammographMatrix
+  for i in range(18):
+      for j in range(18):  
+        if not matrix[i,j]:
+          continue
+        new_x[i, j] = np.sum(np.square(np.abs(obj[i,j] - np.mean(obj[i,j])) - f(obj[i,j])))
+  return new_x
+
+
+def sinus_mean(obj, MammographMatrix):
+  new_x = np.zeros((18, 18))
+  matrix = MammographMatrix
+  for i in range(18):
+      for j in range(18):  
+        if not matrix[i,j]:
+          continue
+        new_x[i, j] = np.mean(obj[i,j])
+  return new_x
